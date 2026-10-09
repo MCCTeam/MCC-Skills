@@ -1,0 +1,42 @@
+# beacon 1
+# needs: inventory.read entity.read
+# setting health_threshold = 6 ; Threshold for local health observations
+# desc: Inspect lifecycle, health, container, player-list, and entity events locally.
+on start
+  show "Session observer loaded"
+end on
+on login
+  show "Session reached play"
+end on
+on reconnect
+  show "New session observed. Previous entity IDs and windows are stale."
+end on
+on disconnect as e
+  show "Session ended: {e.reason}"
+end on
+on health as e when e.health is set and e.health <= settings.health_threshold
+  show "Observed low health: {e.health}"
+end on
+on player_list as e
+  show "Observed tab-list count: {e.count}"
+end on
+on container_open as e
+  show "Container opened: {e.window}, {e.kind}"
+  try
+    set active_window to inv.container()
+    if active_window is set then
+      show "Observed container slot rows: {len(active_window.slots)}"
+    end if
+  catch err
+    show "Container snapshot unavailable: {err.message}"
+  end try
+end on
+on container_close as e
+  show "Container closed: {e.window}"
+end on
+on entity_add as e when e.is_player is yes
+  show "Player entity appeared: {e.name}, ID {e.id}"
+end on
+on entity_remove as e when e.is_player is yes
+  show "Player entity removed: {e.name}, former ID {e.id}"
+end on

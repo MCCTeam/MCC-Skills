@@ -1,0 +1,17 @@
+# beacon 1
+# desc: Use a running provider for a total calculation.
+# example: /shop-total 3 4
+command "/shop-total <price> <count>"
+  set price to number(arg("price"))
+  set count to number(arg("count"))
+  if price is not set or count is not set then
+    show "Enter a numeric price and count."
+  else
+    try
+      set total to call "shop-provider.subtotal"(price, count)
+      show "Order total: {total}"
+    catch err
+      show "Provider unavailable: {err.message}"
+    end try
+  end if
+end command

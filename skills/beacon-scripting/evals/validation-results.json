@@ -1,0 +1,64 @@
+{
+  "source_version": 1,
+  "target_library": 2,
+  "checks": {
+    "sample_count": 10,
+    "lint": {
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "strict_lint": {
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "format_check": {
+      "exit_code": 0,
+      "all_already_formatted": true
+    },
+    "calculations_offline": {
+      "exit_code": 0,
+      "seed": 42,
+      "expected_output": ["Total: 15", "Calculation checks passed"],
+      "assertions_passed": true
+    },
+    "timers_offline": {
+      "exit_code": 0,
+      "tick_seconds": 10,
+      "expected_output": ["Recurring report", "One reminder"]
+    },
+    "shared_counter_offline": {
+      "exit_code": 0,
+      "expected_output": ["Shared count: 1"]
+    },
+    "remaining_example_loading": {
+      "exit_code": 0,
+      "files_checked": 10,
+      "diagnostics": 0
+    },
+    "skill_ste_lint": {
+      "exit_code": 0,
+      "findings": 0
+    },
+    "reference_ste_lint": {
+      "exit_code": 0,
+      "findings": 0
+    },
+    "skill_structure": {
+      "exit_code": 0,
+      "valid": true
+    },
+    "portable_content_scan": {
+      "private_research_paths": 0,
+      "source_repository_links": 0,
+      "em_dashes": 0
+    }
+  },
+  "limitations": [
+    "Offline loading does not execute script commands or Minecraft event handlers.",
+    "No live server effects were checked during sample validation.",
+    "Durable saved state, restricted files, network allowlists, and provider disappearance need host integration checks.",
+    "Language and API details were checked against current runtime code and available MCC CLI behavior."
+  ]
+}

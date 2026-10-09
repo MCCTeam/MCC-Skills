@@ -1,0 +1,22 @@
+# beacon 1
+import "lib/math.bcn" as math
+set total to 0
+for each price in [3, 5, 7]
+  set total to total + price
+end for
+assert(total is 15, "List total")
+assert(math.subtotal(3, 4) is 12, "Imported function")
+set remaining to 0
+repeat 3 times
+  set remaining to remaining + 1
+end repeat
+while remaining > 0
+  set remaining to remaining - 1
+end while
+assert(remaining is 0, "Bounded loops")
+set invalid_number to number("not a number")
+assert(invalid_number is not set, "Invalid numeric text")
+set decoded to json_parse(json_stringify({total: total}))
+assert(decoded.total is 15, "JSON round trip")
+show "Total: {total}"
+show "Calculation checks passed"

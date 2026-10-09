@@ -1,0 +1,45 @@
+# beacon 1
+# needs: dialog.read dialog.write
+# setting enabled = no ; Enable submission for the configured input key
+# setting key = "team_choice" ; Stable input key to match
+# setting value = "blue" ; Non-secret value to submit
+# setting button = 1 ; One-based button number
+# desc: Submit an explicitly enabled dialog input without printing its value.
+# example: /dialog-submit
+function submit_dialog()
+  if settings.enabled is no then
+    show "Dialog submission is disabled."
+    return no
+  end if
+  try
+    set active_dialog to dialog.show()
+    if active_dialog is not set then
+      show "No active dialog is available."
+      return no
+    end if
+    if active_dialog.input_keys contains settings.key then
+      if settings.button < 1 or settings.button > len(active_dialog.buttons) or settings.button is not round(settings.button) then
+        show "Choose a valid one-based button number."
+        return no
+      end if
+      set answers to {}
+      set answers[settings.key] to settings.value
+      if dialog.answer(answers, settings.button) is yes then
+        show "Dialog answer requested. Check the server's next response."
+        return yes
+      end if
+      show "The host refused the dialog answer."
+    else
+      show "The configured input key is absent from this dialog."
+    end if
+  catch err
+    show "Dialog submission failed with code {err.code}."
+  end try
+  return no
+end function
+on dialog as e when settings.enabled is yes and e.input_keys contains settings.key
+  set submitted to submit_dialog()
+end on
+command "/dialog-submit"
+  set submitted to submit_dialog()
+end command

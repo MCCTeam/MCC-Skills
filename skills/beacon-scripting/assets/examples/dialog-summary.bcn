@@ -1,0 +1,16 @@
+# beacon 1
+# needs: dialog.read
+# desc: Show stable dialog keys without printing input values.
+# example: /dialog-summary
+on dialog as e
+  show "Dialog input keys: {join(e.input_keys, ", ")}"
+  show "Dialog buttons: {len(e.buttons)}"
+end on
+command "/dialog-summary"
+  set active_dialog to dialog.show()
+  if active_dialog is set then
+    show "Dialog input keys: {join(active_dialog.input_keys, ", ")}"
+  else
+    show "No active dialog"
+  end if
+end command

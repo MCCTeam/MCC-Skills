@@ -1,0 +1,76 @@
+# beacon 1
+# needs: world.write inventory.read inventory.write
+# desc: Open a table, inspect synced costs, and request one explicit enchantment.
+# example: /enchant-choice top
+command "/enchant-open <x> <y> <z>"
+  set x to number(arg("x"))
+  set y to number(arg("y"))
+  set z to number(arg("z"))
+  if x is not set or y is not set or z is not set then
+    show "Enter three numeric block coordinates."
+  else if x is not round(x) or y is not round(y) or z is not round(z) then
+    show "Use whole block coordinates."
+  else
+    try
+      set opened to world.use(x, y, z)
+      if opened is set then
+        show "Observed window {opened.window}: {opened.kind}"
+      else
+        show "No container observation arrived."
+      end if
+    catch err
+      show "Table opening failed: {err.message}"
+    end try
+  end if
+end command
+command "/enchant-costs"
+  try
+    for each option in enchant.options()
+      if option.level is set then
+        show "Choice {option.slot}: required level {option.level}"
+      else
+        show "Choice {option.slot}: cost not observed yet"
+      end if
+    end for
+  catch err
+    show "Enchanting costs unavailable: {err.message}"
+  end try
+end command
+command "/enchant-choice <choice>"
+  set choice to lower(trim(arg("choice")))
+  set slot to none
+  if choice is "top" then
+    set slot to 0
+  else if choice is "middle" then
+    set slot to 1
+  else if choice is "bottom" then
+    set slot to 2
+  end if
+  if slot is not set then
+    show "Choose top, middle, or bottom."
+  else
+    try
+      set selected_option to none
+      for each option in enchant.options()
+        if option.slot is slot then
+          set selected_option to option
+        end if
+      end for
+      if selected_option is not set then
+        show "The requested choice is unavailable."
+      else if selected_option.level is not set then
+        show "Wait for the server to supply this choice's cost."
+      else if me.xp_level is not set then
+        show "The player's experience level is unavailable."
+      else if selected_option.level > me.xp_level then
+        show "The player lacks the required experience level."
+      else if enchant.choose(slot) is yes then
+        show "Enchanting requested. Check the next item observation."
+      else
+        show "The host refused enchanting. Check the item, lapis, and levels."
+      end if
+    catch err
+      show "Enchanting failed: {err.message}"
+    end try
+  end if
+end command

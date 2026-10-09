@@ -1,0 +1,31 @@
+# beacon 1
+# needs: inventory.read
+# setting item = "torch" ; Item selector for the summary
+# desc: Inspect inventory and container snapshots without changing items.
+# example: /inventory-snapshot
+command "/inventory-snapshot"
+  try
+    show "Matching items: {inv.count(settings.item)}"
+    show "Matching slot IDs: {inv.find_all(settings.item)}"
+    show "Selected hotbar slot: {inv.selected()}"
+    for each slot_record in inv.list()
+      if slot_record.count > 0 then
+        show "Slot {slot_record.slot}: {slot_record.count}x {slot_record.type}"
+        if slot_record.lore is set then
+          show "Lore rows: {len(slot_record.lore)}"
+        end if
+      end if
+    end for
+    show "Armor: {inv.armor()}"
+    set container_record to inv.container()
+    if container_record is set then
+      show "Window {container_record.window}: {container_record.kind}"
+      show "Observed container slots: {len(container_record.slots)}"
+    else
+      show "No observed open container"
+    end if
+    show "Observed recipes: {len(craft_list())}"
+  catch err
+    show "Inventory inspection failed: {err.message}"
+  end try
+end command

@@ -1,0 +1,50 @@
+# beacon 1
+# desc: Parse a deal line into typed data and encode it as JSON.
+# example: /parse-deal "bought 2x bread for $12.50"
+function parse_deal(line)
+  set found to match(trim(line), /^bought (?<count>[0-9]+)x (?<item>[a-z_]+) for \$(?<price>[0-9]+(?:\.[0-9]+)?)$/)
+  if found is not set then
+    return none
+  end if
+  set count to number(found.count)
+  set price to number(found.price)
+  if count is not set or price is not set then
+    return none
+  end if
+  if count < 1 or price < 0 then
+    return none
+  end if
+  return {item: found.item, count: count, price: price}
+end function
+set sample to parse_deal("bought 2x bread for $12.50")
+assert(sample is set, "Recognized deal")
+assert(sample.count is 2 and sample.price is 12.5, "Typed capture groups")
+assert(parse_deal("unrelated message") is not set, "Unrelated text")
+assert(parse_deal("bought 2x bread for $12..50") is not set, "Malformed price")
+set restored to json_parse(json_stringify(sample))
+assert(restored.item is "bread" and restored.count is 2, "JSON round trip")
+set rows to match_all("torch 4 apple 2", /(?<item>[a-z_]+) (?<count>[0-9]+)/)
+assert(len(rows) is 2, "Multiple matches")
+show "Regex and JSON checks passed"
+command "/parse-deal <line>"
+  try
+    set deal to parse_deal(arg("line"))
+    if deal is set then
+      show json_stringify(deal)
+    else
+      show "Use: bought 2x bread for $12.50"
+    end if
+  catch err
+    show "Deal parsing failed: {err.message}"
+  end try
+end command
+on server_message as e when e.text starts with "bought "
+  try
+    set deal to parse_deal(e.text)
+    if deal is set then
+      show json_stringify(deal)
+    end if
+  catch err
+    show "Observed deal parsing failed: {err.message}"
+  end try
+end on

@@ -1,0 +1,6 @@
+# beacon 1
+export function subtotal(price, count)
+  return price * count
+end function
+export set prices to {bread: 3, apple: 5}
+show "Shop provider loaded"

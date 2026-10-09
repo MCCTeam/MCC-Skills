@@ -1,0 +1,41 @@
+# beacon 1
+# needs: net.fetch
+# setting endpoint = "" ; Allowed HTTPS status URL
+# desc: Fetch one configured status response and check its JSON fields.
+# example: /web-status
+function read_status(payload)
+  if payload.ok is not yes then
+    return none
+  end if
+  set players to number(payload.players)
+  if players is not set then
+    return none
+  end if
+  if players < 0 or players > 1000000 or players is not round(players) then
+    return none
+  end if
+  return {players: players}
+end function
+set sample_status to read_status({ok: yes, players: 12})
+assert(sample_status.players is 12, "Status players")
+assert(read_status({ok: yes, players: "unknown"}) is not set, "Invalid count")
+assert(read_status({ok: no, players: 12}) is not set, "Unavailable status")
+show "Status response checks passed"
+command "/web-status"
+  if settings.endpoint is empty then
+    show "Set the HTTPS endpoint and its allowed host before fetching."
+  else
+    try
+      set response to http_get(settings.endpoint)
+      set payload to json_parse(response)
+      set status to read_status(payload)
+      if status is set then
+        show "Observed status players: {status.players}"
+      else
+        show "The response lacks a valid status or player count."
+      end if
+    catch err
+      show "Status fetch or parsing failed: {err.message}"
+    end try
+  end if
+end command

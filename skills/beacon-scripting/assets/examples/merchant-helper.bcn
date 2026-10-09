@@ -1,0 +1,74 @@
+# beacon 1
+# needs: entity.read entity.write inventory.read inventory.write
+# setting max_units = 4 ; Maximum units allowed by one purchase command
+# desc: Open a nearby villager, inspect offers, and request an explicit purchase.
+# example: /trade-purchase 0 1
+command "/merchant-open"
+  try
+    set merchant to entities.nearest("villager", 8)
+    if merchant is not set then
+      show "No tracked villager is nearby."
+    else if merchant.distance is not set then
+      show "Villager distance is unavailable."
+    else if merchant.distance > 4 then
+      show "Move closer before opening the merchant."
+    else
+      interact(merchant)
+      show "Interaction requested. Wait for the container observation."
+    end if
+  catch err
+    show "Merchant interaction failed: {err.message}"
+  end try
+end command
+command "/trade-offers"
+  try
+    set offers to trade.list()
+    show "Observed offers: {len(offers)}"
+    for each offer in offers
+      set second_cost to ""
+      if offer.second is set then
+        set second_cost to " + {offer.second.count}x {offer.second.type}"
+      end if
+      show "Offer {offer.index}: {offer.result.count}x {offer.result.type}"
+      show "Cost: {offer.first.count}x {offer.first.type}{second_cost}, sold out: {offer.sold_out}"
+    end for
+  catch err
+    show "Trade offers unavailable: {err.message}"
+  end try
+end command
+command "/trade-purchase <index> <count>"
+  set index to number(arg("index"))
+  set count to number(arg("count"))
+  if index is not set or count is not set then
+    show "Enter a numeric offer index and unit count."
+  else if index < 0 or index is not round(index) then
+    show "The offer index needs a non-negative whole number."
+  else if count < 1 or count > 64 or count > settings.max_units or count is not round(count) then
+    show "Choose a whole count from 1 through {min(settings.max_units, 64)}."
+  else
+    try
+      set selected_offer to none
+      for each offer in trade.list()
+        if offer.index is index then
+          set selected_offer to offer
+          stop
+        end if
+      end for
+      if selected_offer is not set then
+        show "The requested offer is unavailable."
+      else if selected_offer.sold_out is yes then
+        show "The requested offer is sold out."
+      else if trade.select(index) is yes then
+        set completed to trade.buy(index, count)
+        show "Completed units: {completed} of {count}. Check the next inventory observation."
+      else
+        show "The host refused offer selection."
+      end if
+    catch err
+      show "Trade purchase failed: {err.message}"
+    end try
+  end if
+end command
+on container_open as e
+  show "Container {e.window} observed: {e.kind}"
+end on

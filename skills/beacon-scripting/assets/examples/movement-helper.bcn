@@ -1,0 +1,35 @@
+# beacon 1
+# needs: movement
+# desc: Start coordinate movement from a local MCC command.
+# example: /travel 120 65 -40
+function move_trip(x, y, z)
+  try
+    set arrival to move_goto(x, y, z, {tolerance: 1, sneak: no, sprint: no})
+    if arrival.reached is yes then
+      show "Movement reported arrival: {arrival.detail}"
+    else
+      show "Movement completed without reported arrival: {arrival.detail}"
+    end if
+  catch err
+    show "Movement ended: {err.message}"
+  end try
+end function
+command "/travel <x> <y> <z>"
+  set x to number(arg("x"))
+  set y to number(arg("y"))
+  set z to number(arg("z"))
+  if x is set and y is set and z is set then
+    start move_trip(x, y, z)
+  else
+    show "Enter three numeric coordinates."
+  end if
+end command
+command "/travel-stop"
+  for each task_record in tasks()
+    if task_record.name is "move_trip" and task_record.status is "running" then
+      cancel task task_record.id
+    end if
+  end for
+  stop_moving()
+  show "Movement stop requested"
+end command

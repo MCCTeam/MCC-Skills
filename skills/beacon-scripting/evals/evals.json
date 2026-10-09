@@ -1,0 +1,44 @@
+{
+  "skill_name": "beacon-scripting",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a complete Beacon script for MCC that replies privately to exactly !hello, ignoring case and surrounding whitespace. Make the greeting prefix editable. Count successful greeting requests in saved state, and provide /greeting-stats. Ignore repeat requests from the same player for five seconds without letting unrelated chat consume that delay. Include installation, lint, offline checks, live checks, and the stop command. Use a script ID that remains stable after edits.",
+      "expected_output": "A complete .bcn script with settings, exact event filtering, a state-based per-player delay, saved count, and an internal statistics command. Clear installation and validation steps distinguish offline checks from delivered chat and persistence.",
+      "files": [],
+      "assertions": [
+        "All delivered Beacon files pass public CLI lint.",
+        "The handler uses an exact normalized match and filters before the per-player timestamp changes.",
+        "The editable prefix, saved count, and greeting-stats command are implemented.",
+        "The five-second delay is per player and unrelated chat does not consume it.",
+        "Instructions preserve a stable script ID and include load, stop, offline, and live checks."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create a portable two-file Beacon setup with shop-provider.bcn exporting subtotal(price, count), and shop-caller.bcn registering /shop-total <price> <count>. Invalid numeric text must show a local explanation and perform no provider call. A stopped provider must produce a useful local response. Add pure calculation checks, include every required file, document load order, and check the exact files with MCC's public CLI when available. Do not require an MCC or DMCBK source checkout.",
+      "expected_output": "Two self-contained .bcn files, correct export/call syntax, explicit none checks after numeric conversion, recoverable provider absence, and standalone public CLI procedures. Validation reports distinguish calculation results from command registration and live invocation.",
+      "files": [],
+      "assertions": [
+        "Both provider and caller files pass public CLI lint.",
+        "The provider exports subtotal and the caller uses the correct running-script call syntax.",
+        "Invalid numeric conversion is checked for none before a provider call.",
+        "A stopped provider produces a caught local response.",
+        "The output includes pure calculation assertions, load order, and honest validation limits."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Build a Beacon movement helper for an MCC operator. /travel <x> <y> <z> should start one bounded background trip. /travel-stop should cancel that trip. Reject invalid numeric coordinates locally. Include a read-only /nearby report for tracked entities and chests. Explain the capabilities and client.toml Gameplay prerequisites. Show how to check scripts offline, then check arrival, cancellation, and reconnect on a controlled server. If no live server is available, report that limit explicitly.",
+      "expected_output": "Complete Beacon source using explicit local commands, background movement, task identification/cancellation, bounded searches, error handling, and capability declarations. Documentation separates tracking prerequisites and server effects from lint and offline loading.",
+      "files": [],
+      "assertions": [
+        "The movement helper passes public CLI lint.",
+        "Coordinates are checked for none before movement.",
+        "The trip has a bounded wait, tracked task ID, and explicit cancellation.",
+        "Nearby entity and chest queries have bounds and missing-data handling.",
+        "Instructions cover capabilities, tracking configuration, cancellation, reconnect, and untested server effects."
+      ]
+    }
+  ]
+}

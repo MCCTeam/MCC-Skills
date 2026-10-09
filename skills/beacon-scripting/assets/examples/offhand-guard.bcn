@@ -1,0 +1,36 @@
+# beacon 1
+# needs: inventory.read inventory.write
+# setting enabled = no ; Enable automatic health reactions
+# setting threshold = 6 ; Health threshold for the automatic guard
+# desc: Request a totem move after checking that its source slot exists.
+# example: /equip-totem
+function equip_totem()
+  try
+    set source_slot to inv.find("totem_of_undying")
+    if source_slot is set then
+      if inv.move(source_slot, "offhand") is yes then
+        show "Offhand move requested. Check the next inventory observation."
+      else
+        show "The host refused the offhand move."
+      end if
+    else
+      show "No tracked totem is available."
+    end if
+  catch err
+    show "Offhand move failed: {err.message}"
+  end try
+end function
+on health as e when settings.enabled is yes and e.health is set and e.health <= settings.threshold
+  set worker_running to no
+  for each task_record in tasks()
+    if task_record.name is "equip_totem" and task_record.status is "running" then
+      set worker_running to yes
+    end if
+  end for
+  if worker_running is no then
+    start equip_totem()
+  end if
+end on
+command "/equip-totem"
+  set result to equip_totem()
+end command

@@ -1,0 +1,24 @@
+schema-version = 2
+id = "marketplace-demo"
+version = "1.0.0"
+kind = "source"
+target = "any"
+entry = "MarketplaceDemo.cs"
+framework = "net10.0"
+api-version = "1.0"
+dmcbk = ">=0.1.0-preview.3 <0.2.0"
+umpk = ">=0.9.0-beta.4 <0.10.0"
+needs = []
+deps = []
+man = ["marketplace-demo"]
+
+[hosts]
+mcc = ">=2.0.0 <3.0.0"
+
+[meta]
+description = "Writes a local activation marker for marketplace installation checks."
+tags = ["tutorial", "offline"]
+uses = ["files"]
+
+[services]
+offline = true

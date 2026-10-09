@@ -1,0 +1,9 @@
+schema-version = 2
+id = "local-demo"
+name = "Local marketplace demonstration"
+
+[[plugins]]
+id = "marketplace-demo"
+description = "Writes a local activation marker without a Minecraft connection."
+tags = ["tutorial", "offline"]
+releases = "catalog/marketplace-demo.toml"

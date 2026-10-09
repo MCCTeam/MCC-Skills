@@ -1,0 +1,31 @@
+# beacon 1
+# needs: inventory.read world.search entity.read
+# desc: Show tracked inventory, nearby chests, and entity observations locally.
+# example: /game-report
+command "/game-report"
+  try
+    show "Torches: {inv.count("torch")}"
+    for each slot_record in inv.list()
+      show "Slot {slot_record.slot}: {slot_record.count}x {slot_record.type}"
+    end for
+  catch err
+    show "Inventory unavailable: {err.message}"
+  end try
+  try
+    set chests to world.find_blocks("chest", 16, 5)
+    show "Tracked chests: {len(chests)}"
+    for each chest in chests
+      show "Chest: {chest.x}, {chest.y}, {chest.z}"
+    end for
+  catch err
+    show "Terrain unavailable: {err.message}"
+  end try
+  try
+    set nearby to entities.near(32, 5)
+    for each entity_record in nearby
+      show "Entity {entity_record.id}: {entity_record.type}"
+    end for
+  catch err
+    show "Entities unavailable: {err.message}"
+  end try
+end command

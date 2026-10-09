@@ -1,0 +1,43 @@
+# beacon 1
+# desc: Show timers and operate one bounded worker.
+# example: /task-start
+function worker()
+  repeat 3 times
+    wait 200 milliseconds
+    show "Worker step"
+  end repeat
+  return 3
+end function
+in 5 seconds do
+  show "One reminder"
+end in
+every 10 seconds
+  show "Recurring report"
+end every
+command "/task-start"
+  start worker()
+  for each task_record in tasks()
+    show "Task {task_record.id}: {task_record.name}, {task_record.status}"
+  end for
+end command
+command "/task-cancel <id>"
+  set task_id to number(arg("id"))
+  if task_id is set then
+    cancel task task_id
+  else
+    show "Enter a numeric task ID."
+  end if
+end command
+command "/task-wait <id>"
+  set task_id to number(arg("id"))
+  if task_id is set then
+    try
+      await task_id
+      show "Task settled"
+    catch err
+      show "Task wait failed: {err.message}"
+    end try
+  else
+    show "Enter a numeric task ID."
+  end if
+end command

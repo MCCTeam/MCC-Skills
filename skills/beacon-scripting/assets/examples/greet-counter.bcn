@@ -1,0 +1,27 @@
+# beacon 1
+# needs: chat.send
+# setting prefix = "Hello" ; Greeting text
+# setting gap = 5 ; Minimum seconds between matching requests from one player
+# desc: Count exact greeting requests and remember progress.
+# example: /greeting-stats
+set greetings to saved("greetings") or 0
+set last_by_player to {}
+on chat as e when trim(lower(e.message)) is "!hello"
+  set last_seen to last_by_player[e.player]
+  if last_seen is set then
+    if time.stamp - last_seen <= settings.gap then
+      stop event
+    end if
+  end if
+  try
+    whisper e.player "{settings.prefix}, {e.player}!"
+    set last_by_player[e.player] to time.stamp
+    set greetings to greetings + 1
+    save "greetings" to greetings
+  catch err
+    show "Greeting request failed: {err.message}"
+  end try
+end on
+command "/greeting-stats"
+  show "Greetings: {greetings}"
+end command

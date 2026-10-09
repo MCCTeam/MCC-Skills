@@ -1,0 +1,44 @@
+{
+  "skill_name": "dmcbk-marketplace-authoring",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a schema-2 marketplace named river-tools for my portable source plugin river-status version 1.2.0. It uses API 1.0, DMCBK >=0.1.0-preview.3 <0.2.0, UMPK >=0.9.0-beta.4 <0.10.0, and MCC >=2.0.0 <3.0.0. It needs commands. Build a local demonstration with a complete demonstration plugin, with an actual archive and checksum. Show the exact validation and local installation steps. Save everything in the output folder. Do not publish it.",
+      "expected_output": "A consistent index, release catalogue, root manifest, deterministic source archive, real digest, and executable local test procedure. Publication remains unperformed.",
+      "files": [],
+      "assertions": [
+        "The index, catalogue, and manifest consistently use schema 2 and requested identities and constraints.",
+        "An actual source ZIP contains plugin.toml at its root.",
+        "The catalogue SHA-256 equals the actual archive digest.",
+        "The index and catalogue pass public MCC marketplace validation.",
+        "The output includes reproducible local HTTP installation and clear unperformed publication."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Help me prepare version 0.4.0-beta.2 of stone-map for release. It requires shared-tools ^2.1.0, optionally uses alerts ~3.2.0, and needs commands and beacon. I built native win-x64 and linux-x64 payloads and a single-file source alternative. I did not test Alpine or macOS. Give me the schema-2 metadata templates, package layout, source-selection behavior on Linux musl and macOS ARM64, prerelease installation request, and publication procedure. Clearly identify every value I still need to provide.",
+      "expected_output": "A mixed release with only declared built targets, matching manifests, explicit missing publication inputs, correct source preference and fallback rules, dependency and export distinctions, and prerelease policy.",
+      "files": [],
+      "assertions": [
+        "The schema-2 metadata uses correct index/release fields and declares only win-x64, linux-x64, and source any assets.",
+        "Required shared-tools and optional alerts ranges match across manifest and catalogue.",
+        "Musl and macOS ARM64 do not silently select incompatible native compiled assets.",
+        "The output distinguishes --source from explicit --source-fallback and prerelease selection.",
+        "All unresolved IDs, ranges, URLs, entries, hashes, and validation inputs are clearly identified."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our marketplace upgrade failed. Plugin map-tools requires shared-tools ^2.0.0, another installed plugin requires ^3.0.0, and shared-tools is pinned at 2.4.1 from a different publisher. We also discovered a bad archive for map-tools 2.0.0 that some users installed. Explain the resolution failure, propose a release-history correction, and provide an MCC recovery procedure that preserves user settings. Include what rollback can and cannot restore. Do not silently unpin, remove consumers, rewrite the lock, or replace 2.0.0 bytes.",
+      "expected_output": "A graph-level diagnosis, deliberate source-binding and pin treatment, yanking plus a new immutable release, settings-preserving recovery and transaction rollback limits.",
+      "files": [],
+      "assertions": [
+        "The diagnosis explains the incompatible required graph, pin, and explicit publisher binding.",
+        "The release correction yanks 2.0.0 and publishes a new version without replacing bytes.",
+        "Recovery preserves user settings and does not silently edit the lock, pins, or consumers.",
+        "Rollback limitations cover package selections and irreversible plugin side effects.",
+        "Procedures use supported MCC commands and distinguish validation from successful activation."
+      ]
+    }
+  ]
+}

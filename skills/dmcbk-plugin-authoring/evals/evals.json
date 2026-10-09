@@ -1,0 +1,46 @@
+{
+  "skill_name": "dmcbk-plugin-authoring",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create an MCC plugin called session-ledger. It must count successful sessions, retain the count after restart, let users configure an increment from 1 to 100, and provide /ledger-count plus a Beacon ledger_count function. Give me a source package, a standalone NuGet author project, translated messages, a manual, and a runnable test. I do not have MCC or DMCBK source checkouts.",
+      "expected_output": "A complete .NET 10 project and schema-2 source package using DMCBK 0.1.0-preview.3 and UMPK 0.9.0-beta.4. The plugin uses reconnect-aware session callbacks, scoped commands, settings validation, durable storage, plugin language resources, and a declared Beacon capability. A NuGet-only verifier checks actual runtime source loading and cleanup and states the limits of in-memory testing.",
+      "files": [],
+      "assertions": [
+        "The standalone author project builds using published NuGet packages.",
+        "The source package has a valid schema-2 manifest and contains localization and manual resources.",
+        "Session counting uses SessionStarted, validated increment settings, and durable storage.",
+        "The count command and declared Beacon function use real public APIs.",
+        "A runnable verifier loads the actual source package and checks persistence and unload cleanup."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Design and implement two compiled MCC plugins: price-provider publishes IPriceService and a QuoteRequest/QuoteReply responder, and order-tools consumes both. Keep the contract assembly separate. Add an optional alerts integration that can be absent or unload. Produce standalone NuGet projects, manifests, package staging instructions, and a runtime verifier. Explain why copying the contract DLL privately into both packages is unsafe.",
+      "expected_output": "Self-contained .NET 10 projects with an exported provider contract and a consumer dependency range. Provider registrations use Services and Messenger. Consumer handles missing optional services and re-resolves them for new operations. The consumer package excludes a private duplicate contract and all host assemblies. The runtime verifier checks typed identity, dependency loading, results, and unload behavior.",
+      "files": [],
+      "assertions": [
+        "Provider, consumer, and public contract projects build through NuGet.",
+        "The manifests declare the required provider range and export the public contract.",
+        "Typed Services and Messenger registrations use correct public APIs.",
+        "The consumer handles missing or unloaded optional alerts without a stale retained service.",
+        "Staging excludes host assemblies and the consumer private duplicate contract.",
+        "The verifier exercises typed identity, results, dependency load order, and cleanup."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our MCC plugin works once, but after reconnect its command runs twice and its HTTP worker keeps using the old session. Beacon extern calls also fail when tested before connecting. Give me a repaired standalone compiled plugin template and tests. It will later use a native helper on Windows x64 and Linux arm64, so include honest platform packaging guidance without claiming cross-builds prove execution.",
+      "expected_output": "A template that registers plugin-wide commands once, obtains each session from callbacks, cancels session work with Detached, owns and awaits its HTTP work, and honors bounded deactivation. The host initializes the lazy Beacon engine before activation. Tests separate in-memory loading from same-client reconnect and native target execution. Native packaging identifies win-x64 and linux-arm64 assets with matching dependency metadata.",
+      "files": [],
+      "assertions": [
+        "The repaired standalone compiled project builds through NuGet.",
+        "Commands are registered once or through session scopes, with cleanup.",
+        "Session work uses the current supplied scope and Detached cancellation.",
+        "Background work is owned and awaited during deactivation.",
+        "The host initializes lazy Beacon before pre-session plugin calls.",
+        "The output distinguishes simulated tests, same-client reconnect, native packaging, and platform execution."
+      ]
+    }
+  ]
+}

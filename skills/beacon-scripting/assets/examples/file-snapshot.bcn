@@ -1,0 +1,36 @@
+# beacon 1
+# needs: fs.read fs.write
+# setting path = "example/snapshot.json" ; Relative path inside scripts/data
+# setting note = "Status note" ; Non-secret note stored in the snapshot
+# desc: Explicitly write and read a small JSON file inside the restricted data directory.
+# example: /snapshot-write
+command "/snapshot-write"
+  try
+    set snapshot to {version: 1, written_at: time.stamp, note: settings.note}
+    if file_write(settings.path, json_stringify(snapshot)) is yes then
+      show "Snapshot written inside the restricted data directory."
+    else
+      show "The host refused the snapshot write."
+    end if
+  catch err
+    show "Snapshot write failed: {err.message}"
+  end try
+end command
+command "/snapshot-read"
+  try
+    set snapshot to json_parse(file_read(settings.path))
+    if snapshot.version is not 1 then
+      show "The snapshot has an unsupported format."
+    else if snapshot.note is not set then
+      show "The snapshot lacks its note."
+    else
+      show "Snapshot note: {snapshot.note}"
+      set written_at to number(snapshot.written_at)
+      if written_at is set then
+        show "Written: {time.ago(written_at)}"
+      end if
+    end if
+  catch err
+    show "Snapshot read failed. The existing file remains unchanged: {err.message}"
+  end try
+end command
