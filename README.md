@@ -1,6 +1,6 @@
 # MCC Skills
 
-Agent skills for Beacon scripting, DMCBK plugins, plugin marketplaces, and C# development. Each skill contains instructions and reference material. The authoring skills also include working examples.
+Agent skills for Beacon scripting, DMCBK plugins, plugin marketplaces, C# development, and clear technical writing. Each skill contains instructions and reference material. The authoring skills also include working examples.
 
 These skills do not need an MCC or DMCBK source checkout. Beacon examples use an installed MCC CLI. Plugin examples use published NuGet packages.
 
@@ -38,6 +38,7 @@ The [Vercel skills CLI](https://github.com/vercel-labs/skills) handles discovery
 
 | Skill | Use it to |
 | --- | --- |
+| [asd-ste100](skills/asd-ste100/SKILL.md) | Rewrite ambiguous instructions, tool descriptions, errors, and status reports. |
 | [beacon-scripting](skills/beacon-scripting/SKILL.md) | Create, check, and test `.bcn` scripts, events, commands, and scheduled tasks. |
 | [dmcbk-plugin-authoring](skills/dmcbk-plugin-authoring/SKILL.md) | Create source or compiled plugins with lifecycle, settings, localization, and tests. |
 | [dmcbk-marketplace-authoring](skills/dmcbk-marketplace-authoring/SKILL.md) | Create schema-2 catalogues, versioned releases, platform assets, and checksums. |

@@ -11,7 +11,13 @@ npx skills add . --list
 
 The validator checks each skill's name, metadata, bundled links, and portable reference paths. It does not execute example code.
 
-The installer should list seven skills. Listing does not install them into your agent directories.
+The installer should list eight skills. Listing does not install them into your agent directories.
+
+Run the ASD-STE100 linter checks:
+
+```bash
+python3 skills/asd-ste100/scripts/ste-lint.py --selftest
+```
 
 ## Published package checks
 
